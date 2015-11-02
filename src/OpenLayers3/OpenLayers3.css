@@ -1,0 +1,13 @@
+@CHARSET "UTF-8";
+
+.lyssal_openlayers3 { font-size:11px;position:relative; }
+	.lyssal_openlayers3 .popup { background-color:#fff;border-color:#888;border-radius:6px;border-style:solid;border-width:2px 1px 1px 1px;display:none;max-width:200px;position:absolute;text-align:center;z-index:1000; }
+		.lyssal_openlayers3 .popup .title { border-color:#888;border-style:solid;border-width:0px 0px 1px 0px;font-weight:bold; }
+		.lyssal_openlayers3 .popup .content { padding:4px;text-align:left; }
+		.lyssal_openlayers3 .popup .fleche { bottom:-5px;left:0px;position:absolute;width:100%; }
+			.lyssal_openlayers3 .popup .fleche div { background-color:#fff;border-color:#888;border-style:solid;border-width:0px 1px;height:1px;margin:auto; }
+			.lyssal_openlayers3 .popup .fleche .f-1 { width:10px; }
+			.lyssal_openlayers3 .popup .fleche .f-2 { width:8px; }
+			.lyssal_openlayers3 .popup .fleche .f-3 { width:6px; }
+			.lyssal_openlayers3 .popup .fleche .f-4 { width:4px; }
+			.lyssal_openlayers3 .popup .fleche .f-5 { background-color:#888;border-width:0px;width:2px; }
