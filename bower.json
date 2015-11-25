@@ -1,0 +1,20 @@
+{
+  "name": "lyssal-lib-web",
+  "description": "Librairie générale composée de différentes classes.",
+  "main": [
+    "src/Debogage.js",
+    "src/Web.js"
+  ],
+  "dependencies": {
+    "jquery": ">= 1.7.1"
+  },
+  "keywords": [
+    "debogage",
+    "debug",
+    "web"
+  ],
+  "authors": [
+    "Rémi Leclerc"
+  ],
+  "license": "proprietary"
+}
