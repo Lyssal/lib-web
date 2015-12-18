@@ -1,5 +1,6 @@
 # Librairies JavaScript de Lyssal
 
+
 ## Debogage
 
 Classe permettant d'aider à déboguer en JavaScript.
@@ -17,6 +18,18 @@ Classe permettant de gérer des fonctionnalités web (navigation, redirection...
 * `Lyssal_Web.reload()` : Recharge la page en cours
 * `Lyssal_Web.back()` : Redirige l'utilisateur vers la page précédente
 * `Lyssal_Web.print()` : Imprime la page en cours
+
+
+## Form
+
+Ensemble de classes permettant de gérer des formulaires.
+
+### Do
+
+Classe ajoutant automatiquement un champ caché "do" dans un formulaire. Cela permet notamment d'ajouter simplement des boutons de soumission en dehors du formulaire ; ces boutons peuvent avoir des fonctions différentes (que vous devrez gérer dans le code côté serveur) selon la valeur "do" que vous leur attribuez (un bouton redirige par exemple vers telle page et un autre vers telle autre page).
+
+* `Lyssal_Form_Do.setDoAndSubmit(valeurDo, formulaire)` : Spécifie une valeur au champ "do" et soumet le formulaire
+* `Lyssal_Form_Do.setDo(valeurDo, formulaire)` : Spécifie juste une valeur au champ "do"
 
 
 ## Géolocalisation
