@@ -45,3 +45,28 @@ Permet de traiter simplement une carte avec OpenLayers3. Nécessite OpenLayers3.
 
 * `new Lyssal_OpenLayers3_Map(elementCarteId, positionCentre, zoom)` : Met en place une carte
 * `monObjetLyssalOpenLayers3.addMarker(imageSrc, position, titre, contenu)` : Ajoute un marker sur la carte
+
+
+## Clignotement
+
+Classe permettant de faire clignoter un élément. Cette classe peut par exemple être utilisée pour faire clignoter un élément pendant une attente AJAX.
+
+* `new Lyssal_Clignotement(element)` : Fait clignoter l'élément
+* `Lyssal_Clignotement.ANIMATION_TIME` : (variable) Durée en secondes d'un seul clignotement
+* `Lyssal_Clignotement.prototype.setElement(element)` : Spécifie l'élément à faire clignoter
+* `Lyssal_Clignotement.prototype.start()` : Commence le clignotement
+* `Lyssal_Clignotement.prototype.stop()` : Arrête le clignotement
+
+Exemples d'utilisation :
+
+```js
+var monClignotement = new Lyssal_Clignotement($('.mon-element'));
+setTimeout(function() { monClignotement.stop(); }, 4000);
+```
+
+```js
+var monClignotement = new Lyssal_Clignotement();
+monClignotement.setElement($('.mon-element'));
+monClignotement.start();
+setTimeout(function() { monClignotement.stop(); }, 4000);
+```
