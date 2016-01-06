@@ -24,6 +24,9 @@ Classe permettant de gérer des fonctionnalités web (navigation, redirection...
 
 Ensemble de classes permettant de gérer des formulaires.
 
+* `Lyssal_Form.submitForm(form, confirmationMessage)` : Soumet un formulaire avec éventuellement un message de confirmation
+* `Lyssal_Form.cleanField(field, confirmationMessage)` : Vide un champ avec éventuellement un message de confirmation
+
 ### Do
 
 Classe ajoutant automatiquement un champ caché "do" dans un formulaire. Cela permet notamment d'ajouter simplement des boutons de soumission en dehors du formulaire ; ces boutons peuvent avoir des fonctions différentes (que vous devrez gérer dans le code côté serveur) selon la valeur "do" que vous leur attribuez (un bouton redirige par exemple vers telle page et un autre vers telle autre page).
