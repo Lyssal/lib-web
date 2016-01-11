@@ -26,6 +26,9 @@ Ensemble de classes permettant de gérer des formulaires.
 
 * `Lyssal_Form.submitForm(form, confirmationMessage)` : Soumet un formulaire avec éventuellement un message de confirmation
 * `Lyssal_Form.cleanField(field, confirmationMessage)` : Vide un champ avec éventuellement un message de confirmation
+* `Lyssal_Form.check(field)` : Coche une case
+* `Lyssal_Form.uncheck(field)` : Décoche une case
+* `Lyssal_Form.toggleCheck(field)` : Coche une case si décochée ou la décoche si cochée
 
 ### Do
 
