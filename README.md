@@ -26,9 +26,17 @@ Ensemble de classes permettant de gérer des formulaires.
 
 * `Lyssal_Form.submitForm(form, confirmationMessage)` : Soumet un formulaire avec éventuellement un message de confirmation
 * `Lyssal_Form.cleanField(field, confirmationMessage)` : Vide un champ avec éventuellement un message de confirmation
-* `Lyssal_Form.check(field)` : Coche une case
-* `Lyssal_Form.uncheck(field)` : Décoche une case
-* `Lyssal_Form.toggleCheck(field)` : Coche une case si décochée ou la décoche si cochée
+
+### Box
+
+Classe de gestion des boutons de type radio et checkbox.
+
+* `Lyssal_Form_Box.check(field)` : Coche une case
+* `Lyssal_Form_Box.uncheck(field)` : Décoche une case
+* `Lyssal_Form_Box.toggleCheck(field)` : Coche une case si décochée ou la décoche si cochée
+* `Lyssal_Form_Box.getCheckedBoxes(parent)` : Retourne tous les boutons de type radio/checkbox cochés dans un élément
+* `Lyssal_Form_Box.countCheckedBoxes(parent)` : Retourne le nombre de boutons de type radio/checkbox cochés dans un élément
+* `Lyssal_Form_Box.hasCheckedBox(parent)` : Retourne si l'élément contient au moins un boutons de type radio/checkbox coché
 
 ### Do
 
