@@ -37,6 +37,8 @@ Classe de gestion des boutons de type radio et checkbox.
 * `Lyssal_Form_Box.getCheckedBoxes(parent)` : Retourne tous les boutons de type radio/checkbox cochés dans un élément
 * `Lyssal_Form_Box.countCheckedBoxes(parent)` : Retourne le nombre de boutons de type radio/checkbox cochés dans un élément
 * `Lyssal_Form_Box.hasCheckedBox(parent)` : Retourne si l'élément contient au moins un boutons de type radio/checkbox coché
+* `Lyssal_Form_Box.checkAll(container)` : Coche toutes les cases à l'intérieur d'un élément du DOM
+* `Lyssal_Form_Box.uncheckAll(container)` : Décoche toutes les cases à l'intérieur d'un élément du DOM
 
 ### Do
 

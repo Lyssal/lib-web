@@ -64,3 +64,23 @@ Lyssal_Form_Box.hasCheckedBox = function(parent)
 {
     return Lyssal_Form_Box.countCheckedBoxes(parent) > 0;
 };
+
+/**
+ * Coche toutes les cases à l'intérieur d'un élément du DOM.
+ *
+ * @param Element container Container
+ */
+Lyssal_Form_Box.checkAll = function(container)
+{
+    $(container).find('input[type=radio], input[type=checkbox]').prop('checked', true);
+};
+
+/**
+ * Décoche toutes les cases à l'intérieur d'un élément du DOM.
+ *
+ * @param Element container Container
+ */
+Lyssal_Form_Box.uncheckAll = function(container)
+{
+    $(container).find('input[type=radio]:checked, input[type=checkbox]:checked').prop('checked', false);
+};
