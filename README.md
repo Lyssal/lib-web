@@ -45,6 +45,25 @@ Classe ajoutant automatiquement un champ caché "do" dans un formulaire. Cela pe
 * `Lyssal_Form_Do.setDoAndSubmit(valeurDo, formulaire)` : Spécifie une valeur au champ "do" et soumet le formulaire
 * `Lyssal_Form_Do.setDo(valeurDo, formulaire)` : Spécifie juste une valeur au champ "do"
 
+### Select
+
+Classe permettant de gérer les listes de sélection (champs de type SELECT).
+
+* `Lyssal_Form_Select.prototype.getValue()` : Retourne la valeur (attribut value de l'option sélectionné)
+* `Lyssal_Form_Select.prototype.setValue(optionValue)` : Sélectionne une unique option
+* `Lyssal_Form_Select.prototype.addValue(optionValue)` : Sélectionne une option
+* `Lyssal_Form_Select.prototype.removeValue(optionValue)` : Désélectionne une option
+* `Lyssal_Form_Select.prototype.hasValue(optionValue)` : Retourne si la liste possède une option avec l'attribut value d'une certaine valeur
+* `Lyssal_Form_Select.prototype.clear()` : Supprime tous les options de la liste
+* `Lyssal_Form_Select.prototype.addOption(optionValue, optionTexte)` : Ajoute une option à la liste
+* `Lyssal_Form_Select.prototype.addOptions(optionsTab)` : Ajoute des options à la liste
+
+Exemples d'utilisation :
+```js
+var select = new Lyssal_Form_Select('#mon-select');
+select.addValue('value-toto');
+```
+
 
 ## Géolocalisation
 
@@ -72,7 +91,6 @@ Classe permettant de faire clignoter un élément. Cette classe peut par exemple
 * `Lyssal_Clignotement.prototype.stop()` : Arrête le clignotement
 
 Exemples d'utilisation :
-
 ```js
 var monClignotement = new Lyssal_Clignotement($('.mon-element'));
 setTimeout(function() { monClignotement.stop(); }, 4000);
