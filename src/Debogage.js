@@ -30,8 +30,7 @@ Lyssal_Debogage.alert = function(objet)
 {
     var texteAlerte = 'Type : ' + Lyssal_Debogage.getTypeObjet(objet) + "\n\n";
 
-    if (objet instanceof jQuery)
-    {
+    if (objet instanceof jQuery) {
         if (objet.length != undefined)
         {
             texteAlerte += 'Longueur du tableau : ' + objet.length + "\n\n";
@@ -41,15 +40,15 @@ Lyssal_Debogage.alert = function(objet)
             });
         }
         else texteAlerte += Lyssal_Debogage.getChaineProprietesEtFonctions(objet);
-    }
-    else if ((typeof objet) == 'string' || (typeof objet) == 'number')
-    {
+    } else if (objet instanceof Array) {
+        texteAlerte += 'Longueur du tableau : ' + objet.length + "\n\n";
+        for (var i in objet) {
+            texteAlerte += i + (Nodevo_Debogage.AFFICHE_PROPRIETES_VIDES ? '' : ' : ' + objet[i]) + "\n";
+        }
+    } else if ((typeof objet) == 'string' || (typeof objet) == 'number' || (typeof objet) == 'boolean') {
         texteAlerte += objet;
-    }
-    else
-    {
-        for (var i in objet)
-        {
+    } else {
+        for (var i in objet) {
             texteAlerte += i + (Lyssal_Debogage.AFFICHE_PROPRIETES_VIDES ? '' : ' : ' + objet[i]) + "\n";
         }
     }
@@ -71,6 +70,9 @@ Lyssal_Debogage.getTypeObjet = function(objet)
         return 'Nombre';
     if (objet instanceof jQuery)
         return 'Objet jQuery';
+    if (objet instanceof Array) {
+        return 'Tableau';
+    }
     if (objet instanceof Element)
     {
         if (objet.tagName.toLowerCase() == 'input')
