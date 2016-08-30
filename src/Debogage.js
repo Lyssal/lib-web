@@ -43,7 +43,7 @@ Lyssal_Debogage.alert = function(objet)
     } else if (objet instanceof Array) {
         texteAlerte += 'Longueur du tableau : ' + objet.length + "\n\n";
         for (var i in objet) {
-            texteAlerte += i + (Nodevo_Debogage.AFFICHE_PROPRIETES_VIDES ? '' : ' : ' + objet[i]) + "\n";
+            texteAlerte += i + (Lyssal_Debogage.AFFICHE_PROPRIETES_VIDES ? '' : ' : ' + objet[i]) + "\n";
         }
     } else if ((typeof objet) == 'string' || (typeof objet) == 'number' || (typeof objet) == 'boolean') {
         texteAlerte += objet;
