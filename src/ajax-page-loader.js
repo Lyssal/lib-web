@@ -4,6 +4,7 @@
  * A class which permit to load pages in AJAX.
  *
  * Set the attribute data-ajax="true" in your links or submit buttons to activate the AJAX page loader.
+ * Init with <code>Lyssal_AjaxPageLoader.initAjaxLinks();</code>
  *
  * You define can define default properties or use these attributes :
  * <ul>
@@ -104,7 +105,8 @@ Lyssal_AjaxPageLoader.initAjaxLinks = function(elements)
         var $element = $(element);
 
         // If there is a click event, we got it to see if the event have to be stopped or not
-        var onclickEvent = $element.context.onclick;
+        var context = $element.context;
+        var onclickEvent = ('undefined' != typeof context ? context.onclick : null);
         if (null !== onclickEvent) {
             $element.unbind('click').prop('onclick', null).attr('onclick', null);
         }
@@ -189,29 +191,34 @@ Lyssal_AjaxPageLoader.ajaxLink_Click = function(link, elements)
         var redirectUrl = Lyssal_AjaxPageLoader.getAttribute(link, 'data-redirect-url');
 
         Lyssal_AjaxPageLoader.processBeforeAjaxLoading(link);
-        $.ajax(url, ajaxOptions).success(function(response) {
+        ajaxOptions.success = function(response) {
             if (null === redirectUrl) {
                 Lyssal_AjaxPageLoader.processBeforeContentSetting(link);
                 $(targetElement).html(response);
                 Lyssal_AjaxPageLoader.initAjaxLinks(elements);
                 Lyssal_AjaxPageLoader.processAfterContentSetting(link);
             } else {
-                $.ajax(redirectUrl).success(function (response) {
-                    Lyssal_AjaxPageLoader.processBeforeContentSetting(link);
-                    $(targetElement).html(response);
-                    Lyssal_AjaxPageLoader.initAjaxLinks(elements);
-                    Lyssal_AjaxPageLoader.processAfterContentSetting(link);
-                }).complete(function () {
-                    Lyssal_AjaxPageLoader.hideLoading(ajaxLoader);
-                    Lyssal_AjaxPageLoader.processAfterAjaxLoading(link);
+                $.ajax(redirectUrl, {
+                    success: function (response) {
+                        Lyssal_AjaxPageLoader.processBeforeContentSetting(link);
+                        $(targetElement).html(response);
+                        Lyssal_AjaxPageLoader.initAjaxLinks(elements);
+                        Lyssal_AjaxPageLoader.processAfterContentSetting(link);
+                    },
+                    complete: function () {
+                        Lyssal_AjaxPageLoader.hideLoading(ajaxLoader);
+                        Lyssal_AjaxPageLoader.processAfterAjaxLoading(link);
+                    }
                 });
             }
-        }).complete(function() {
+        };
+        ajaxOptions.complete = function() {
             if (null === redirectUrl) {
                 Lyssal_AjaxPageLoader.hideLoading(ajaxLoader);
                 Lyssal_AjaxPageLoader.processAfterAjaxLoading(link);
             }
-        });
+        };
+        $.ajax(url, ajaxOptions);
 
         return false;
     } else {
