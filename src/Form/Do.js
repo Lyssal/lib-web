@@ -1,45 +1,47 @@
 /**
- * Classe JS initialisant un nouveau champ caché à la soumission du formulaire.
+ * A class which create if necessary and initialize an hidden field "do" in a form.
  *
  * @author Rémi Leclerc
  */
-var Lyssal_Form_Do = function() {};
+var Lyssal_Form_Do = Object.create(Object.prototype);
 
 
 /**
- * Spécifie une valeur au champ "do" et soumet le formulaire.
- * 
- * @param string  valeurDo   Valeur du do
- * @param Element formulaire Formulaire du do
+ * Set a value into do and submit the form.
+ *
+ * @var string  value The value of do
+ * @var Element form  The form
  */
-Lyssal_Form_Do.setDoAndSubmit = function(valeurDo, formulaire)
+Lyssal_Form_Do.setDoAndSubmit = function(value, form)
 {
-    Lyssal_Form_Do.setDo(valeurDo, formulaire);
-    $(formulaire).submit();
+    Lyssal_Form_Do.setDo(value, form);
+    $(form).submit();
 };
 
 /**
- * Spécifie juste une valeur au champ "do".
- * 
- * @param string  valeurDo   Valeur du do
- * @param Element formulaire Formulaire du do
+ * Set the value.
+ *
+ * @var string  value The value of do
+ * @var Element form  The form
  */
-Lyssal_Form_Do.setDo = function(valeurDo, formulaire)
+Lyssal_Form_Do.setDo = function(value, form)
 {
-    Lyssal_Form_Do.createFieldDoIfNoExists(formulaire);
+    Lyssal_Form_Do.createFieldDoIfNoExists(form);
 
-    $(formulaire).find('input[name=do]').val(valeurDo);
+    $(form).find('input[name=do]').val(value);
 };
 
 /**
- * Crée le champ "do" s'il n'existe pas dans le formulaire.
+ * Create the do field if not present in the form.
+ *
+ * @var Element form The form
  */
-Lyssal_Form_Do.createFieldDoIfNoExists = function(formulaire)
+Lyssal_Form_Do.createFieldDoIfNoExists = function(form)
 {
-    if (0 === $(formulaire).find('input[name=do]').size()) {
+    if (0 === $(form).find('input[name=do]').size()) {
         $('<input/>', {
             type: 'hidden',
             name: 'do'
-        }).appendTo(formulaire);
+        }).appendTo(form);
     }
 };

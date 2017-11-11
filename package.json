@@ -1,0 +1,11 @@
+{
+  "name": "lyssal-lib-web",
+  "version": "1.0.0",
+  "description": "The Lyssal web library.",
+  "scripts": {},
+  "author": "Rémi Leclerc",
+  "license": "proprietary",
+  "dependencies": {
+    "jquery": ">= 1.7.1"
+  }
+}

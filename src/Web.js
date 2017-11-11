@@ -1,47 +1,67 @@
 /**
- * Classe permettant de gérer des fonctionnalités web (navigation, redirection...).
- * 
+ * Some web functionalities.
+ *
  * @author Rémi Leclerc
  */
 var Lyssal_Web = function() {};
 
-/**
- * Redirige l'internaute vers une autre page.
- * 
- * @param string url L'URL vers laquelle l'internaute sera redirigé
- * @return void
- */
-Lyssal_Web.redirect = function(url)
-{
-    window.location = url;
-};
 
 /**
- * Recharge la page en cours.
- * 
- * @return void
- */
-Lyssal_Web.reload = function()
-{
-    window.location.href = window.location.href;
-};
-
-/**
- * Redirige l'utilisateur vers la page précédente.
- * 
- * @return void
- */
-Lyssal_Web.back = function()
-{
-    window.history.back();
-};
-
-/**
- * Imprime la page en cours.
- * 
- * @return void
+ * Print the current page.
  */
 Lyssal_Web.print = function()
 {
     window.print();
+};
+
+/**
+ * Return the value of a GET parameter.
+ *
+ * @var name The name of the parameter
+ */
+Lyssal_Web.getQueryParameterByName = function(name)
+{
+    name = name.replace(/[[]/,"\[").replace(/[]]/,"\]");
+
+    var regex = new RegExp('[\?&]' + name + '=([^&#]*)');
+    var results = regex.exec(window.location.href);
+
+    if (null != results) {
+        return decodeURIComponent(results[1].replace(/\+/g, ' '));
+    }
+
+    return null;
+};
+
+/**
+ * Block the context menu for images.
+ *
+ * @var string   message  (optioanl) The message of the alert
+ */
+Lyssal_Web.blockImagesContextMenu = function(message)
+{
+    Lyssal_Web.blockElementsContextMenu(['img'], message);
+};
+
+/**
+ * Block the context menu for some elements.
+ *
+ * @var string[] tagNames The tag names
+ * @var string   message  (optioanl) The message of the alert
+ */
+Lyssal_Web.blockElementsContextMenu = function(tagNames, message)
+{
+    var bodies = document.getElementsByTagName('body');
+
+    for (var i = 0; i < bodies.length; i++) {
+        bodies[i].oncontextmenu = function (e) {
+            var tagName = e.target.tagName.toLowerCase();
+            if (jQuery.inArray(tagName, tagNames)) {
+                if ('undefined' !== typeof message) {
+                    alert(message);
+                }
+                return false;
+           }
+       };
+    }
 };

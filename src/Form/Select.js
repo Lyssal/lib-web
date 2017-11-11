@@ -1,9 +1,9 @@
 /**
- * Classe permettant de gérer les listes de sélection (champs de type SELECT).
- * 
+ * A class which permits to manage select fields.
+ *
  * @author Rémi Leclerc
- * 
- * @param Element select Liste de sélection (select)
+ *
+ * @var Element select The select field
  */
 var Lyssal_Form_Select = function(select)
 {
@@ -12,15 +12,15 @@ var Lyssal_Form_Select = function(select)
 
 
 /**
- * @var Element Champ de type SELECT
+ * @var Element The select field
  */
-Lyssal_Form_Select.prototype.select;
+Lyssal_Form_Select.prototype.select = null;
 
 
 /**
- * Retourne la valeur (attribut value de l'option sélectionné).
- * 
- * @return string Valeur
+ * Get the selected value.
+ *
+ * @return string The value
  */
 Lyssal_Form_Select.prototype.getValue = function()
 {
@@ -28,81 +28,81 @@ Lyssal_Form_Select.prototype.getValue = function()
 };
 
 /**
- * Sélectionne une unique option.
- * 
- * @param string optionValue Valeur (attribut value) de l'option à sélectionner
- * @return Lyssal_Form_Select
+ * Select one value.
+ *
+ * @var string value The value of the option to select
+ * @return Lyssal_Form_Select This
  */
-Lyssal_Form_Select.prototype.setValue = function(optionValue)
+Lyssal_Form_Select.prototype.selectValue = function(value)
 {
-    $(this.select).val(optionValue);
-    
+    $(this.select).val(value);
+
     return this;
 };
 
 /**
- * Sélectionne une option.
- * 
- * @param string optionValue Valeur (attribut value) de l'option à sélectionner
- * @return Lyssal_Form_Select
+ * Select a value (if the select is multiple).
+ *
+ * @var string value The value of the option to select
+ * @return Lyssal_Form_Select This
  */
-Lyssal_Form_Select.prototype.addValue = function(optionValue)
+Lyssal_Form_Select.prototype.addSelectedValue = function(value)
 {
-    $(this.select).find('option[value="' + optionValue + '"]').prop('selected', true);
-    
+    $(this.select).find('option[value="' + value + '"]').prop('selected', true);
+
     return this;
 };
 
 /**
- * Désélectionne une option.
- * 
- * @param string optionValue Valeur (attribut value) de l'option à désélectionner
- * @return Lyssal_Form_Select
+ * Unselect a value.
+ *
+ * @var string value The value of the option to unselect
+ * @return Lyssal_Form_Select This
  */
-Lyssal_Form_Select.prototype.removeValue = function(optionValue)
+Lyssal_Form_Select.prototype.unselectValue = function(value)
 {
-    $(this.select).find('option[value="' + optionValue + '"]').prop('selected', false);
-    
+    $(this.select).find('option[value="' + value + '"]').prop('selected', false);
+
     return this;
 };
 
 /**
- * Retourne si la liste possède une option avec l'attribut value d'une certaine valeur.
- * 
- * @param string optionValue Valeur à rechercher
- * @return boolean VRAI si au moins une option est trouvée avec value=optionValue 
+ * Return if the select has an option with a specified value.
+ *
+ * @var string value The value to search
+ * @return bool If the option has been found
  */
-Lyssal_Form_Select.prototype.hasValue = function(optionValue)
+Lyssal_Form_Select.prototype.hasValue = function(value)
 {
-    return (0 != ($(this.select).find('option[value="' + optionValue + '"]').size()));
+    return (0 != ($(this.select).find('option[value="' + value + '"]').size()));
 };
 
 
 /**
- * Supprime tous les options de la liste.
- * 
- * @return Lyssal_Form_Select
+ * Delete all options in the select.
+ *
+ * @return Lyssal_Form_Select This
  */
 Lyssal_Form_Select.prototype.clear = function()
 {
     $(this.select).empty();
-    
+
     return this;
 };
 
 /**
- * Ajoute une option à la liste.
- * 
- * @param string optionValue Valeur de l'attribut 'value' de l'option
- * @param string optionTexte Texte de l'option
- * @return Lyssal_Form_Select
+ * Add an option.
+ *
+ * @var string value The option's value
+ * @var string text  The option's text
+ * @return Lyssal_Form_Select This
  */
-Lyssal_Form_Select.prototype.addOption = function(optionValue, optionTexte)
+Lyssal_Form_Select.prototype.addOption = function(value, text)
 {
     $(this.select).append(
         $('<option></option>', {
-            value: optionValue,
-            text: optionTexte
+            value: value,
+            text: text
         })
     );
 
@@ -110,17 +110,17 @@ Lyssal_Form_Select.prototype.addOption = function(optionValue, optionTexte)
 };
 
 /**
- * Ajoute des options à la liste.
- * 
- * @param Array optionsTab Tableaux dynamiques (l'index étant l'attribut 'value' des options)
- * @return Lyssal_Form_Select
+ * Add options in the select.
+ *
+ * @var Array options The array of options (keys are values)
+ * @return Lyssal_Form_Select This
  */
-Lyssal_Form_Select.prototype.addOptions = function(optionsTab)
+Lyssal_Form_Select.prototype.addOptions = function(options)
 {
     $.each(
-        optionsTab,
-        function(optionValue, optionTexte) {
-            this.addOption(optionValue, optionTexte);
+        options,
+        function(optionValue, optionText) {
+            this.addOption(optionValue, optionText);
         }
     );
 
