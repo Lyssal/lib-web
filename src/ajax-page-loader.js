@@ -23,10 +23,14 @@
  * <code>
  *     Lyssal_AjaxPageLoader.AFTER_AJAX_LOADING_DEFAULT = function (element) {
  *         Lyssal_Navigation.setStateUrl(Lyssal_AjaxPageLoader.getUrl(element));
+ *
+ *         // You can have the target element like that:
+ *         // var targetElement = ($(element).is('[data-target]') ? $(element).attr('data-target') : Lyssal_AjaxPageLoader.TARGET_DEFAULT);
  *     };
  * </code>
  *
  * Needs Lyssal_Navigation.
+ * Can be used with Lyssal_Blinking for beautiful transitions: <code>Lyssal_AjaxPageLoader.LOADING_TYPE = Lyssal_AjaxPageLoader.LOADING_TYPE_LYSSAL_BLINKING;</code>
  *
  * @author Rémi Leclerc
  */
