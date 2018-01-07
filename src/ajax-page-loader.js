@@ -9,7 +9,9 @@
  * You define can define default properties or use these attributes :
  * <ul>
  *     <li>data-target : The element where the page will be loaded</li>
+ *     <li>data-url : The URL of the AJAX call (by default, the href parameter of the link or the action parameter of the form)</li>
  *     <li>data-redirect-url : The redirect location, useful to force a redirection when forms are submitted</li>
+ *     <li>data-refresh-target : The other elements which have to be refreshed (separated with commas) ; use data-url and data-target on these elements</li>
  *     <li>data-method : The HTTP method</li>
  *     <li>data-before-ajax-loading : The function name to call before the AJAX loading (for the declaration, the argument is the element)</li>
  *     <li>data-after-ajax-loading : The function name to call after the AJAX loading (for the declaration, the argument is the element)</li>
@@ -150,12 +152,18 @@ Lyssal_AjaxPageLoader.initDefaultLoadingType = function()
 /**
  * The event when a user clicks an AJAX link.
  *
- * @var Element link     The target link
- * @var string  elements The jQuery string of the links
+ * @var Element link           The target link
+ * @var string  elements       The jQuery string of the links
+ * @var bollean refreshTargets If have to refresh target elements
+ *
  * @return boolean IF there is an AJAX call
  */
-Lyssal_AjaxPageLoader.ajaxLink_Click = function(link, elements)
+Lyssal_AjaxPageLoader.ajaxLink_Click = function(link, elements, refreshTargets)
 {
+    if (false !== refreshTargets) {
+        refreshTargets = true;
+    }
+
     var url = Lyssal_AjaxPageLoader.getUrl(link);
 
     if (null !== url && 'undefined' != typeof url) {
@@ -215,6 +223,16 @@ Lyssal_AjaxPageLoader.ajaxLink_Click = function(link, elements)
                     }
                 });
             }
+
+            if (refreshTargets) {
+                var refreshTargetElements = Lyssal_AjaxPageLoader.getAttribute(link, 'data-refresh-target');
+                if (null !== refreshTargetElements) {
+                    var $refreshTargetElements = $(refreshTargetElements);
+                    $refreshTargetElements.each(function (i, refreshTargetElement) {
+                        Lyssal_AjaxPageLoader.ajaxLink_Click(refreshTargetElement, elements, false);
+                    });
+                }
+            }
         };
         ajaxOptions.complete = function() {
             if (null === redirectUrl) {
@@ -247,8 +265,9 @@ Lyssal_AjaxPageLoader.isLink = function(element)
 /**
  * Get the attribute of an element.
  *
- * @var Element element   The element
- * @var string  attribute The attribute
+ * @var Element    element      The element
+ * @var string     attribute    The attribute
+ * @var mixed|null defaultValue The value if attribute not found
  *
  * @return string|null The attribute
  */
@@ -278,6 +297,11 @@ Lyssal_AjaxPageLoader.getUrl = function(element)
 {
     var $element = $(element);
 
+    var url = Lyssal_AjaxPageLoader.getAttribute(element, 'data-url');
+    if (url !== null) {
+        return url;
+    }
+
     if ($element.is('[href]')) {
         return $element.attr('href');
     }
@@ -304,9 +328,9 @@ Lyssal_AjaxPageLoader.getUrl = function(element)
  */
 Lyssal_AjaxPageLoader.getElementForm = function(element)
 {
-    var $forms = $($(element).closest('form'));
+    var $forms = $(element).closest('form');
 
-    if ($forms.size() > 0) {
+    if ($forms.length > 0) {
         return $($forms.get(0));
     }
 
