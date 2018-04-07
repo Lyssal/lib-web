@@ -15,6 +15,8 @@
  *     <li>data-method : The HTTP method</li>
  *     <li>data-before-ajax-loading : The function name to call before the AJAX loading (for the declaration, the argument is the element)</li>
  *     <li>data-after-ajax-loading : The function name to call after the AJAX loading (for the declaration, the argument is the element)</li>
+ *     <li>data-before-form-submitting : The function name to call before a form submit using the ajax loading (for the declaration, the argument is the element)</li>
+ *     <li>data-after-form-submitting : The function name to call after a form submit using the ajax loading (for the declaration, the argument is the element)</li>
  *     <li>data-before-content-setting : The function name to call before the content setting (for the declaration, the argument is the element)</li>
  *     <li>data-after-content-setting : The function name to call after the content setting (for the declaration, the argument is the element)</li>
  *     <li>data-ajax-events="false" : Unactivate all events</li>
@@ -28,6 +30,15 @@
  *
  *         // You can have the target element like that:
  *         // var targetElement = ($(element).is('[data-target]') ? $(element).attr('data-target') : Lyssal_AjaxPageLoader.TARGET_DEFAULT);
+ *     };
+ * </code>
+ *
+ * If you use CKEditor, you can use:
+ * <code>
+ *     Lyssal_AjaxPageLoader.BEFORE_FORM_SUBMITTING_DEFAULT = function () {
+ *         for (instance in CKEDITOR.instances) {
+ *             CKEDITOR.instances[instance].updateElement();
+ *         }
  *     };
  * </code>
  *
@@ -59,6 +70,16 @@ Lyssal_AjaxPageLoader.BEFORE_AJAX_LOADING_DEFAULT = null;
  * @type function The function event after AJAX loading
  */
 Lyssal_AjaxPageLoader.AFTER_AJAX_LOADING_DEFAULT = null;
+
+/**
+ * @type function The function event before a form submit
+ */
+Lyssal_AjaxPageLoader.BEFORE_FORM_SUBMITTING_DEFAULT = null;
+
+/**
+ * @type function The function event after a form submit
+ */
+Lyssal_AjaxPageLoader.AFTER_FORM_SUBMITTING_DEFAULT = null;
 
 /**
  * @type function The function event before the content setting
@@ -168,13 +189,17 @@ Lyssal_AjaxPageLoader.ajaxLink_Click = function(link, elements, refreshTargets)
 
     if (null !== url && 'undefined' != typeof url) {
         var targetElement = Lyssal_AjaxPageLoader.getAttribute(link, 'data-target', Lyssal_AjaxPageLoader.TARGET_DEFAULT),
-            ajaxOptions = {};
+            ajaxOptions = {},
+            isForm = false;
 
         // Options for form
         if (!Lyssal_AjaxPageLoader.isLink(link)) {
             var $form = Lyssal_AjaxPageLoader.getElementForm(link);
             if (null !== $form) {
+                isForm = true;
                 ajaxOptions.method = Lyssal_AjaxPageLoader.getAttribute($form, 'method', 'POST');
+
+                Lyssal_AjaxPageLoader._processEvent(link, 'data-before-form-submitting', Lyssal_AjaxPageLoader.BEFORE_FORM_SUBMITTING_DEFAULT);
 
                 if ('get' === ajaxOptions.method.toLowerCase()) {
                     ajaxOptions.data = $form.serialize();
@@ -202,24 +227,27 @@ Lyssal_AjaxPageLoader.ajaxLink_Click = function(link, elements, refreshTargets)
         var ajaxLoader = Lyssal_AjaxPageLoader.displayLoading(targetElement);
         var redirectUrl = Lyssal_AjaxPageLoader.getAttribute(link, 'data-redirect-url');
 
-        Lyssal_AjaxPageLoader.processBeforeAjaxLoading(link);
+        Lyssal_AjaxPageLoader._processEvent(link, 'data-before-ajax-loading', Lyssal_AjaxPageLoader.BEFORE_AJAX_LOADING_DEFAULT);
         ajaxOptions.success = function(response) {
             if (null === redirectUrl) {
-                Lyssal_AjaxPageLoader.processBeforeContentSetting(link);
+                Lyssal_AjaxPageLoader._processEvent(link, 'data-before-content-setting', Lyssal_AjaxPageLoader.BEFORE_CONTENT_SETTING_DEFAULT);
                 $(targetElement).html(response);
                 Lyssal_AjaxPageLoader.initAjaxLinks(elements);
-                Lyssal_AjaxPageLoader.processAfterContentSetting(link);
+                Lyssal_AjaxPageLoader._processEvent(link, 'data-after-content-setting', Lyssal_AjaxPageLoader.AFTER_CONTENT_SETTING_DEFAULT);
             } else {
                 $.ajax(redirectUrl, {
                     success: function (response) {
-                        Lyssal_AjaxPageLoader.processBeforeContentSetting(link);
+                        Lyssal_AjaxPageLoader._processEvent(link, 'data-before-content-setting', Lyssal_AjaxPageLoader.BEFORE_CONTENT_SETTING_DEFAULT);
                         $(targetElement).html(response);
                         Lyssal_AjaxPageLoader.initAjaxLinks(elements);
-                        Lyssal_AjaxPageLoader.processAfterContentSetting(link);
+                        Lyssal_AjaxPageLoader._processEvent(link, 'data-after-content-setting', Lyssal_AjaxPageLoader.AFTER_CONTENT_SETTING_DEFAULT);
                     },
                     complete: function () {
                         Lyssal_AjaxPageLoader.hideLoading(ajaxLoader);
-                        Lyssal_AjaxPageLoader.processAfterAjaxLoading(link);
+                        if (isForm) {
+                            Lyssal_AjaxPageLoader._processEvent(link, 'data-after-form-submitting', Lyssal_AjaxPageLoader.AFTER_FORM_SUBMITTING_DEFAULT);
+                        }
+                        Lyssal_AjaxPageLoader._processEvent(link, 'data-after-ajax-loading', Lyssal_AjaxPageLoader.AFTER_AJAX_LOADING_DEFAULT);
                     }
                 });
             }
@@ -237,7 +265,10 @@ Lyssal_AjaxPageLoader.ajaxLink_Click = function(link, elements, refreshTargets)
         ajaxOptions.complete = function() {
             if (null === redirectUrl) {
                 Lyssal_AjaxPageLoader.hideLoading(ajaxLoader);
-                Lyssal_AjaxPageLoader.processAfterAjaxLoading(link);
+                if (isForm) {
+                    Lyssal_AjaxPageLoader._processEvent(link, 'data-after-form-submitting', Lyssal_AjaxPageLoader.AFTER_FORM_SUBMITTING_DEFAULT);
+                }
+                Lyssal_AjaxPageLoader._processEvent(link, 'data-after-ajax-loading', Lyssal_AjaxPageLoader.AFTER_AJAX_LOADING_DEFAULT);
             }
         };
         $.ajax(url, ajaxOptions);
@@ -350,92 +381,25 @@ Lyssal_AjaxPageLoader.eventsAreActivate = function(element)
 };
 
 /**
- * Process the event before the AJAX loading.
+ * Process an event.
  *
- * @var Element element The element
+ * @var Element  element         The element
+ * @var string   dataAttribute   The element attribute used for the event function
+ * @var function functionDefault The default function
  */
-Lyssal_AjaxPageLoader.processBeforeAjaxLoading = function(element)
+Lyssal_AjaxPageLoader._processEvent = function(element, dataAttribute, functionDefault)
 {
     if (Lyssal_AjaxPageLoader.eventsAreActivate(element)) {
-        var beforeAjaxLoading = Lyssal_AjaxPageLoader.getAttribute(element, 'data-before-ajax-loading', Lyssal_AjaxPageLoader.BEFORE_AJAX_LOADING_DEFAULT);
+        var eventFunction = Lyssal_AjaxPageLoader.getAttribute(element, dataAttribute, functionDefault);
 
-        if (null !== beforeAjaxLoading) {
-            if ('function' != typeof beforeAjaxLoading) {
-                // If beforeAjaxLoading is a script, eval will execute it
-                if ('function' == eval('typeof ' + beforeAjaxLoading)) {
-                    eval(beforeAjaxLoading + '(element)');
-                }
-            } else {
-                beforeAjaxLoading(element);
-            }
-        }
-    }
-};
-
-/**
- * Process the event efter the AJAX loading.
- *
- * @var Element element The element
- */
-Lyssal_AjaxPageLoader.processAfterAjaxLoading = function(element)
-{
-    if (Lyssal_AjaxPageLoader.eventsAreActivate(element)) {
-        var afterAjaxLoading = Lyssal_AjaxPageLoader.getAttribute(element, 'data-after-ajax-loading', Lyssal_AjaxPageLoader.AFTER_AJAX_LOADING_DEFAULT);
-
-        if (null !== afterAjaxLoading) {
-          if ('function' != typeof afterAjaxLoading) {
-            // If afterAjaxLoading is a script, eval will execute it
-            if ('function' == eval('typeof ' + afterAjaxLoading)) {
-              eval(afterAjaxLoading + '(element)');
+        if (null !== eventFunction) {
+          if ('function' != typeof eventFunction) {
+            // If eventFunction is a script, eval will execute it
+            if ('function' == eval('typeof ' + eventFunction)) {
+              eval(eventFunction + '(element)');
             }
           } else {
-            afterAjaxLoading(element);
-          }
-        }
-    }
-};
-
-/**
- * Process the event before the content setting.
- *
- * @var Element element The element
- */
-Lyssal_AjaxPageLoader.processBeforeContentSetting = function(element)
-{
-    if (Lyssal_AjaxPageLoader.eventsAreActivate(element)) {
-        var beforeContentSetting = Lyssal_AjaxPageLoader.getAttribute(element, 'data-before-content-setting', Lyssal_AjaxPageLoader.BEFORE_CONTENT_SETTING_DEFAULT);
-
-        if (null !== beforeContentSetting) {
-          if ('function' != typeof beforeContentSetting) {
-            // If beforeAjaxLoading is a script, eval will execute it
-            if ('function' == eval('typeof ' + beforeContentSetting)) {
-              eval(beforeContentSetting + '(element)');
-            }
-          } else {
-            beforeContentSetting(element);
-          }
-        }
-    }
-};
-
-/**
- * Process the event efter the content setting.
- *
- * @var Element element The element
- */
-Lyssal_AjaxPageLoader.processAfterContentSetting = function(element)
-{
-    if (Lyssal_AjaxPageLoader.eventsAreActivate(element)) {
-        var afterContentSetting = Lyssal_AjaxPageLoader.getAttribute(element, 'data-after-content-setting', Lyssal_AjaxPageLoader.AFTER_CONTENT_SETTING_DEFAULT);
-
-        if (null !== afterContentSetting) {
-          if ('function' != typeof afterContentSetting) {
-            // If afterAjaxLoading is a script, eval will execute it
-            if ('function' == eval('typeof ' + afterContentSetting)) {
-              eval(afterContentSetting + '(element)');
-            }
-          } else {
-            afterContentSetting(element);
+            eventFunction(element);
           }
         }
     }
