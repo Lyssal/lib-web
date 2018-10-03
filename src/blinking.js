@@ -8,7 +8,7 @@ var Lyssal_Blinking = function($element) {
     this.onGoing = false;
 
     if (undefined !== $element) {
-        this.setElement($element);
+        this.setElement($($element));
         this.start();
     }
 };
@@ -34,6 +34,12 @@ Lyssal_Blinking.FLASH_COLOR = '#ffffff';
 Lyssal_Blinking.ANIMATION_DELAY = 250;
 
 /**
+ * @var int The default z-index
+ */
+Lyssal_Blinking.Z_INDEX = 99999;
+
+
+/**
  * Set the blinked element.
  *
  * @var Element $element The element
@@ -46,16 +52,23 @@ Lyssal_Blinking.prototype.setElement = function($element) {
  * Start the blinking.
  */
 Lyssal_Blinking.prototype.start = function() {
-    var $layer = $('<div>');
+    var top = ('relative' === this.$element.css('position') ? 0 : parseInt(this.$element.position().top)) + parseInt(this.$element.css('paddingTop')),
+        left = ('relative' === this.$element.css('position') ? 0 : parseInt(this.$element.position().left)) + parseInt(this.$element.css('paddingLeft')),
+        $layer = $('<div>'),
+        css = {
+            backgroundColor: Lyssal_Blinking.FLASH_COLOR,
+            height: this.$element.height(),
+            left: left,
+            position: 'absolute',
+            top:  top,
+            width: this.$element.width(),
+            zIndex: Lyssal_Blinking.Z_INDEX
+        }
+    ;
+
     $layer.addClass(Lyssal_Blinking.CSS_CLASS);
-    $layer.css({
-        backgroundColor: Lyssal_Blinking.FLASH_COLOR,
-        height: this.$element.height(),
-        left: this.$element.offset().left,
-        position: 'absolute',
-        top: this.$element.offset().top,
-        width: this.$element.width()
-    });
+    $layer.css(css);
+
     this.$element.append($layer);
 
   this.onGoing = true;
@@ -87,7 +100,7 @@ Lyssal_Blinking.prototype.blink = function() {
                     self.blink();
                 }
             })
-      ;
+        ;
     } else {
         $(flashContainer).remove();
     }
