@@ -8,7 +8,7 @@
  *
  * You define can define default properties or use these attributes :
  * <ul>
- *     <li>data-target : The element where the page will be loaded</li>
+ *     <li>data-target : The element where the page will be loaded, can be empty</li>
  *     <li>data-url : The URL of the AJAX call (by default, the href parameter of the link or the action parameter of the form)</li>
  *     <li>data-redirect-url : The redirect location, useful to force a redirection when forms are submitted</li>
  *     <li>data-refresh-target : The other elements which have to be refreshed (separated with commas) ; use data-url and data-target on these elements</li>
@@ -229,21 +229,28 @@ Lyssal_AjaxPageLoader.ajaxLink_Click = function(link, elements, refreshTargets)
             }
         }
 
-        var ajaxLoader = Lyssal_AjaxPageLoader.displayLoading(targetElement);
+        var ajaxLoader = null;
+        if ('' !== targetElement) {
+            var ajaxLoader = Lyssal_AjaxPageLoader.displayLoading(targetElement);
+        }
         var redirectUrl = Lyssal_AjaxPageLoader.getAttribute(link, 'data-redirect-url');
 
         Lyssal_AjaxPageLoader._processEvent(link, 'data-before-ajax-loading', Lyssal_AjaxPageLoader.BEFORE_AJAX_LOADING_DEFAULT);
         ajaxOptions.success = function(response) {
             if (null === redirectUrl) {
                 Lyssal_AjaxPageLoader._processEvent(link, 'data-before-content-setting', Lyssal_AjaxPageLoader.BEFORE_CONTENT_SETTING_DEFAULT);
-                $(targetElement).html(response);
+                if ('' !== targetElement) {
+                    $(targetElement).html(response);
+                }
                 Lyssal_AjaxPageLoader.initAjaxLinks(elements);
                 Lyssal_AjaxPageLoader._processEvent(link, 'data-after-content-setting', Lyssal_AjaxPageLoader.AFTER_CONTENT_SETTING_DEFAULT);
             } else {
                 $.ajax(redirectUrl, {
                     success: function (response) {
                         Lyssal_AjaxPageLoader._processEvent(link, 'data-before-content-setting', Lyssal_AjaxPageLoader.BEFORE_CONTENT_SETTING_DEFAULT);
-                        $(targetElement).html(response);
+                        if ('' !== targetElement) {
+                            $(targetElement).html(response);
+                        }
                         Lyssal_AjaxPageLoader.initAjaxLinks(elements);
                         Lyssal_AjaxPageLoader._processEvent(link, 'data-after-content-setting', Lyssal_AjaxPageLoader.AFTER_CONTENT_SETTING_DEFAULT);
                     },
