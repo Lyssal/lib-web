@@ -28,6 +28,10 @@ Lyssal_Blinking.CSS_CLASS = 'lyssal-blinking-layer';
  */
 Lyssal_Blinking.FLASH_COLOR = '#ffffff';
 
+/**
+ * @var string The animation delay
+ */
+Lyssal_Blinking.ANIMATION_DELAY = 250;
 
 /**
  * Set the blinked element.
@@ -74,7 +78,7 @@ Lyssal_Blinking.prototype.blink = function() {
             }, {
                 duration: duration
             })
-            .delay(100)
+            .delay(Lyssal_Blinking.ANIMATION_DELAY)
             .animate({
                 opacity:1
             }, {
