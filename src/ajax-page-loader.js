@@ -92,9 +92,9 @@ Lyssal_AjaxPageLoader.BEFORE_CONTENT_SETTING_DEFAULT = null;
 Lyssal_AjaxPageLoader.AFTER_CONTENT_SETTING_DEFAULT = null;
 
 /**
- * @type int|null The loader type
+ * @type int|null The loader type (null if not needed)
  */
-Lyssal_AjaxPageLoader.LOADING_TYPE = null;
+Lyssal_AjaxPageLoader.LOADING_TYPE = 0;
 
 /**
  * @type int Search an existing loading type
