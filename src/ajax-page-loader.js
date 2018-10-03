@@ -97,6 +97,11 @@ Lyssal_AjaxPageLoader.AFTER_CONTENT_SETTING_DEFAULT = null;
 Lyssal_AjaxPageLoader.LOADING_TYPE = null;
 
 /**
+ * @type int Search an existing loading type
+ */
+Lyssal_AjaxPageLoader.LOADING_TYPE_DEFAULT = 0;
+
+/**
  * @type int Type Lyssal_Blinking
  */
 Lyssal_AjaxPageLoader.LOADING_TYPE_LYSSAL_BLINKING = 1;
@@ -159,7 +164,7 @@ Lyssal_AjaxPageLoader.initAjaxLinks = function(elements)
  */
 Lyssal_AjaxPageLoader.initDefaultLoadingType = function()
 {
-    if (null === Lyssal_AjaxPageLoader.LOADING_TYPE) {
+    if (Lyssal_AjaxPageLoader.LOADING_TYPE_DEFAULT === Lyssal_AjaxPageLoader.LOADING_TYPE) {
         if ('function' === typeof jQuery.fn.LoadingOverlay) {
             Lyssal_AjaxPageLoader.LOADING_TYPE = Lyssal_AjaxPageLoader.LOADING_TYPE_GASPARE_SGANGA_JQUERY_LOADING_OVERLAY;
         } else if ('function' === typeof jQuery.fn.loadingOverlay) {
@@ -438,7 +443,7 @@ Lyssal_AjaxPageLoader.displayLoading = function (targetElement)
  */
 Lyssal_AjaxPageLoader.hideLoading = function (object)
 {
-	if (null !== Lyssal_AjaxPageLoader.LOADING_TYPE) {
+	if (null !== Lyssal_AjaxPageLoader.LOADING_TYPE && null !== object) {
       switch (Lyssal_AjaxPageLoader.LOADING_TYPE) {
           case Lyssal_AjaxPageLoader.LOADING_TYPE_LYSSAL_BLINKING:
               object.stop();
